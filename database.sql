@@ -6,25 +6,26 @@ CREATE TABLE users (
   name VARCHAR(100) NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
-  avatar VARCHAR(500),
+  avatar_url VARCHAR(500),
+  is_online BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE rooms (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  is_group BOOLEAN DEFAULT FALSE,
-  created_by INT,
+  description TEXT,
+  created_by INT NOT NULL,
+  is_private BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (created_by) REFERENCES users(id)
 );
 
 CREATE TABLE room_members (
-  id INT AUTO_INCREMENT PRIMARY KEY,
   room_id INT NOT NULL,
   user_id INT NOT NULL,
   joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_member (room_id, user_id),
+  PRIMARY KEY (room_id, user_id),
   FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -37,7 +38,8 @@ CREATE TABLE messages (
   is_read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
-  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (sender_id) REFERENCES users(id)
 );
 
-INSERT INTO rooms (name, is_group) VALUES ('General', TRUE), ('Tech Talk', TRUE);
+-- Default general room
+INSERT INTO rooms (name, description, created_by, is_private) VALUES ('general', 'General discussion', 1, FALSE);

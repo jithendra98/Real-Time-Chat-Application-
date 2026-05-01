@@ -1,83 +1,59 @@
 # 💬 Real-Time Chat Application
 
-A real-time messaging application built with **Node.js, Socket.io, Express.js, MySQL, Redis, React.js, and Docker**.
+A real-time messaging application built with **Node.js, Socket.io, MySQL, Redis, and React.js**.
 
 ## 🚀 Features
-- Real-time messaging using **Socket.io** (bi-directional communication)
-- Private and group chat rooms
-- Live **typing indicators** and read receipts
-- JWT-based authentication
-- **Redis pub/sub** for multi-instance socket broadcasting and horizontal scalability
-- Chat history stored in MySQL, recent messages cached in Redis (last 100 msgs)
-- Online/offline user status tracking
-- Dockerized for production deployment on AWS EC2
+- Real-time messaging with Socket.io (bi-directional events)
+- Live typing indicators and online user presence
+- Group rooms and private channels
+- Chat history stored in MySQL, recent messages cached in Redis
+- Redis pub/sub for horizontal scaling across multiple server instances
+- JWT-based authentication for secure socket connections
+- Dockerized for easy cloud deployment on AWS EC2
 
 ## 🛠️ Tech Stack
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React.js, Socket.io-client |
-| Backend | Node.js, Express.js, Socket.io |
+| Backend | Node.js, Express.js |
+| Real-Time | Socket.io |
 | Database | MySQL |
 | Cache & Pub/Sub | Redis |
-| Auth | JWT (jsonwebtoken), bcryptjs |
-| DevOps | Docker, Docker Compose, AWS EC2 |
+| Auth | JWT |
+| Frontend | React.js |
+| DevOps | Docker, Docker Compose |
 
 ## 📁 Project Structure
 ```
-├── backend/
-│   ├── server.js         # Express + Socket.io server
-│   ├── src/
-│   │   ├── config/       # DB & Redis config
-│   │   ├── middleware/   # JWT auth
-│   │   └── routes/       # REST API routes
-├── frontend/
-│   └── src/
-│       ├── components/   # Chat UI components
-│       ├── pages/        # React pages
-│       └── context/      # Auth & Socket context
+├── server.js          # Express + Socket.io server
 ├── database.sql
 ├── Dockerfile
-└── docker-compose.yml
+├── docker-compose.yml
+├── src/
+│   ├── config/        # DB & Redis config
+│   ├── middleware/    # JWT auth
+│   └── routes/        # Auth, rooms, messages
+└── public/            # React frontend
 ```
 
 ## ⚙️ Setup & Run
-
-### Backend
 ```bash
-cd backend
-cp .env.example .env
+git clone https://github.com/jithendra98/Real-Time-Chat-Application-.git
+cd Real-Time-Chat-Application-
 npm install
+cp .env.example .env
+mysql -u root -p < database.sql
 npm run dev
 ```
 
-### Database
-```bash
-mysql -u root -p < database.sql
-```
-
-### Docker (Full Stack)
-```bash
-docker-compose up --build
-```
-
-## 📡 Socket Events
-| Event | Direction | Description |
-|-------|-----------|-------------|
-| room:join | Client → Server | Join a chat room |
-| message:send | Client → Server | Send a message |
-| message:receive | Server → Client | Receive a message |
-| typing:start | Client → Server | User started typing |
-| typing:stop | Client → Server | User stopped typing |
-| users:online | Server → Client | Online users list |
-
-## 📡 REST API
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/auth/register | Register |
-| POST | /api/auth/login | Login |
-| GET | /api/rooms | Get my rooms |
-| POST | /api/rooms | Create room |
-| GET | /api/messages/:roomId | Get messages |
+## 📡 API & Socket Events
+| Type | Event/Endpoint | Description |
+|------|---------------|-------------|
+| REST | POST /api/auth/register | Register user |
+| REST | GET /api/messages/:roomId | Get chat history |
+| Socket | message:send | Send a message |
+| Socket | message:receive | Receive a message |
+| Socket | typing:start / stop | Typing indicator |
+| Socket | users:online | Online users list |
 
 ## 👨‍💻 Author
 **Mallela Jithendra** — [GitHub](https://github.com/jithendra98) | [LinkedIn](https://linkedin.com/in/mallela-jithendra)
